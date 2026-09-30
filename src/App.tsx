@@ -18,13 +18,12 @@ const TRANSITION = {
 
 /**
  * Section backgrounds — purple/maroon family, cream text + nav still readable.
- * Samples (warm rose-maroon) vs Hobbies (cool deep purple) are intentionally far apart.
  */
 const SECTION_BG: Record<SectionId, string> = {
   hero: '#6d1822', // deep wine
   about: '#5a1a38', // berry plum
-  samples: '#6b2040', // warm rose-maroon
-  hobbies: '#2a1a4a', // cool deep purple
+  samples: '#3f1528', // darker wine-plum (distinct from about)
+  hobbies: '#4a2038', // muted mauve-maroon (less blue, pairs with nav)
   booking: '#521c2e', // dusty rosewood
 };
 
