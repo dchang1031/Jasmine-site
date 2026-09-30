@@ -10,7 +10,7 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
   return (
     <section id="hero" className="relative pt-10 pb-20">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="flex flex-col md:flex-row items-center gap-0">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-0">
           
           {/* Editorial Text - Left */}
           <motion.div 
@@ -40,7 +40,7 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="w-full md:w-1/2 flex justify-start -ml-20 mt-32"
+            className="w-full md:w-1/2 flex justify-center md:justify-end -ml-20 md:ml-0 mt-32 md:mt-20"
           >
             <img 
               src="/src/assets/images/hero_jasmine_portrait_1790733232771.jpg" 
