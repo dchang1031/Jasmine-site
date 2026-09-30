@@ -33,9 +33,7 @@
   border-radius: 40px;
 }
 
-/*
- * Jasmine greeting shake — pure CSS so it starts on first paint
- */
+/* Jasmine greeting shake */
 @keyframes jasmine-shake {
   0%   { transform: rotate(0deg); }
   4%   { transform: rotate(-4deg); }
@@ -54,38 +52,37 @@
   animation: jasmine-shake 3s ease-in-out infinite;
 }
 
-/*
- * FillButton background fill (L→R)
- * Default: collapsed. Expanded via hover (desktop) or .is-pressed (mobile).
- */
+/* ---------- Fill button ---------- */
 .fill-layer {
   transform: scaleX(0);
   transform-origin: left center;
+  transition: transform 0.3s ease-out;
 }
 
-.fill-layer.is-pressed {
+.fill-btn-label {
+  transition: color 0.3s ease-out;
+}
+
+/* Mobile / press */
+.fill-btn[data-pressed="true"] > .fill-layer {
   transform: scaleX(1);
 }
+.fill-btn[data-variant="solid"][data-pressed="true"] > .fill-btn-label {
+  color: #f3dfc6;
+}
+.fill-btn[data-variant="outline"][data-pressed="true"] > .fill-btn-label {
+  color: #6d1822;
+}
 
-/* Desktop: hover expands fill + inverts text color */
+/* Desktop hover */
 @media (hover: hover) and (pointer: fine) {
   .fill-btn:hover > .fill-layer {
     transform: scaleX(1);
   }
-
-  /* Solid variant: cream → maroon text becomes cream */
-  .fill-btn:hover > .fill-btn-label.text-\[\#6d1822\],
-  .fill-btn:hover > .fill-btn-label {
-    color: inherit;
-  }
-
-  /* Use data attributes via parent classes is cleaner — set explicit rules */
-  .fill-btn:hover > .fill-btn-label {
+  .fill-btn[data-variant="solid"]:hover > .fill-btn-label {
     color: #f3dfc6;
   }
-
-  /* Outline buttons start with cream text → invert to maroon on hover */
-  .fill-btn.bg-transparent:hover > .fill-btn-label {
+  .fill-btn[data-variant="outline"]:hover > .fill-btn-label {
     color: #6d1822;
   }
 }
