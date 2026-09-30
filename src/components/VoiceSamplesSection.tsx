@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 
 interface SampleVideo {
   id: string;
@@ -19,14 +20,13 @@ const SAMPLES: SampleVideo[] = [
   },
 ];
 
-/** Large rounded-corner play triangle */
 const RoundedPlayTriangle = () => (
   <svg
-    width="48"
-    height="54"
+    width="36"
+    height="40"
     viewBox="0 0 28 32"
     fill="none"
-    className="ml-1.5 drop-shadow-md"
+    className="ml-1 drop-shadow-md"
     aria-hidden
   >
     <path
@@ -53,7 +53,7 @@ const ArtisticPlayButton: React.FC<{ playing: boolean; onClick: () => void }> = 
     <span
       className={`
         relative flex items-center justify-center
-        w-[88px] h-[88px] md:w-[100px] md:h-[100px]
+        w-14 h-14 md:w-16 md:h-16
         bg-[#825260]/90 backdrop-blur-sm
         shadow-[0_8px_28px_rgba(0,0,0,0.35)]
         transition-all duration-300
@@ -67,9 +67,9 @@ const ArtisticPlayButton: React.FC<{ playing: boolean; onClick: () => void }> = 
       }}
     >
       {playing ? (
-        <span className="flex gap-2">
-          <span className="w-3 h-9 bg-[#f3dfc6] rounded-full" />
-          <span className="w-3 h-9 bg-[#f3dfc6] rounded-full" />
+        <span className="flex gap-1.5">
+          <span className="w-2 h-6 bg-[#f3dfc6] rounded-full" />
+          <span className="w-2 h-6 bg-[#f3dfc6] rounded-full" />
         </span>
       ) : (
         <RoundedPlayTriangle />
@@ -78,17 +78,17 @@ const ArtisticPlayButton: React.FC<{ playing: boolean; onClick: () => void }> = 
   </button>
 );
 
-const SampleCard: React.FC<{ sample: SampleVideo; align: 'left' | 'right' }> = ({
-  sample,
-  align,
-}) => {
+const SampleCard: React.FC<{
+  sample: SampleVideo;
+  align: 'left' | 'right';
+  delay: number;
+}> = ({ sample, align, delay }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
 
   const toggle = () => {
     const v = videoRef.current;
     if (!v) return;
-
     if (v.paused) {
       v.play();
       setPlaying(true);
@@ -99,12 +99,15 @@ const SampleCard: React.FC<{ sample: SampleVideo; align: 'left' | 'right' }> = (
   };
 
   return (
-    <div
-      className={`w-full max-w-xl ${
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] }}
+      className={`w-full max-w-md md:max-w-lg ${
         align === 'left' ? 'self-start' : 'self-end'
       }`}
     >
-      <div className="relative overflow-hidden rounded-[32px] bg-[#825260] shadow-xl aspect-video">
+      <div className="relative overflow-hidden rounded-[20px] md:rounded-[24px] bg-[#825260] shadow-xl aspect-video">
         <video
           ref={videoRef}
           src={sample.src}
@@ -117,23 +120,30 @@ const SampleCard: React.FC<{ sample: SampleVideo; align: 'left' | 'right' }> = (
         />
         <ArtisticPlayButton playing={playing} onClick={toggle} />
       </div>
-      <p className="mt-3 px-2 text-sm font-bold uppercase tracking-widest text-[#f3dfc6]/80">
+      <p className="mt-1.5 md:mt-2 px-1 text-xs md:text-sm font-bold uppercase tracking-widest text-[#f3dfc6]/80">
         {sample.title}
       </p>
-    </div>
+    </motion.div>
   );
 };
 
 export const VoiceSamplesSection: React.FC = () => {
   return (
-    <div className="max-w-5xl mx-auto px-6 w-full py-10 flex flex-col gap-10">
-      <h2 className="font-display text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter text-[#f3dfc6]">
+    <div className="w-full h-full max-w-5xl mx-auto px-5 md:px-6 flex flex-col justify-center gap-3 md:gap-5 py-2">
+      <motion.h2
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-[#f3dfc6] shrink-0 leading-tight"
+      >
         Here are 2 of my samples
-      </h2>
+      </motion.h2>
 
-      <div className="flex flex-col gap-12">
-        <SampleCard sample={SAMPLES[0]} align="left" />
-        <SampleCard sample={SAMPLES[1]} align="right" />
+      <div className="flex flex-col gap-3 md:gap-5 min-h-0">
+        {/* First sample — left, arrives first */}
+        <SampleCard sample={SAMPLES[0]} align="left" delay={0.15} />
+        {/* Second sample — right, arrives slightly later */}
+        <SampleCard sample={SAMPLES[1]} align="right" delay={0.4} />
       </div>
     </div>
   );
