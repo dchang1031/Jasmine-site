@@ -7,6 +7,9 @@
     --accent-maroon: #8e2d56;
     --accent-purple: #a6519b;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     background-color: var(--bg-light-purple);
     color: var(--text-dark);
@@ -26,4 +29,15 @@
 
 .card-rounded {
   border-radius: 40px;
+}
+
+/* Section scroll snap helpers (used by AnimatedSection) */
+.snap-y {
+  scroll-snap-type: y proximity;
+}
+.snap-start {
+  scroll-snap-align: start;
+}
+.snap-always {
+  scroll-snap-stop: always;
 }
