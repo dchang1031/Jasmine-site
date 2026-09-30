@@ -32,3 +32,15 @@
 .card-rounded {
   border-radius: 40px;
 }
+
+/*
+ * FillButton: left→right fill
+ * Desktop (hover-capable): expand on hover
+ * Mobile: driven by JS pressed state only (no sticky hover)
+ */
+@media (hover: hover) and (pointer: fine) {
+  button:hover > .fill-layer,
+  a:hover > .fill-layer {
+    transform: scaleX(1);
+  }
+}
