@@ -16,6 +16,24 @@ const TRANSITION = {
   ease: [0.22, 1, 0.36, 1] as const,
 };
 
+/**
+ * Section backgrounds — same purple/maroon family as hero (#6d1822),
+ * tuned so cream text (#f3dfc6) and nav (#825260) still read clearly.
+ * Transitions are intentionally slow/soft.
+ */
+const SECTION_BG: Record<SectionId, string> = {
+  hero: '#6d1822', // deep wine (original)
+  about: '#5a1a38', // berry plum
+  samples: '#4a1745', // muted violet-maroon
+  hobbies: '#3d1f4a', // soft indigo-plum
+  booking: '#521c2e', // dusty rosewood
+};
+
+const BG_TRANSITION = {
+  duration: 1.4,
+  ease: [0.4, 0, 0.2, 1] as const,
+};
+
 export default function App() {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -175,7 +193,12 @@ export default function App() {
   const showMic = currentId === 'about' || currentId === 'samples';
 
   return (
-    <div className="bg-[#6d1822] text-[#1a1a1a] selection:bg-[#e65c26] selection:text-white h-screen overflow-hidden">
+    <motion.div
+      className="text-[#1a1a1a] selection:bg-[#e65c26] selection:text-white h-screen overflow-hidden"
+      initial={false}
+      animate={{ backgroundColor: SECTION_BG[currentId] }}
+      transition={BG_TRANSITION}
+    >
       <Navbar
         onNavigate={goToId}
         onDirectBooking={() => goToId('booking')}
@@ -200,10 +223,9 @@ export default function App() {
         </AnimatePresence>
       </div>
 
-      {/* Sketch mic — visible from About through Samples */}
       <AnimatePresence>
         {showMic && <SketchMicDecoration key="sketch-mic" />}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }
