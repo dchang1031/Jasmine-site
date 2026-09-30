@@ -22,9 +22,6 @@ export const FillButton: React.FC<FillButtonProps> = ({
 }) => {
   const [pressed, setPressed] = useState(false);
 
-  // Color pairs
-  // solid default: cream bg / maroon text → fill: maroon bg / cream text
-  // outline default: transparent / cream border+text → fill: cream bg / maroon text
   const isSolid = variant === 'solid';
 
   const shell = isSolid
@@ -34,40 +31,31 @@ export const FillButton: React.FC<FillButtonProps> = ({
   const fillBg = isSolid ? 'bg-[#6d1822]' : 'bg-[#f3dfc6]';
   const fillText = isSolid ? 'text-[#f3dfc6]' : 'text-[#6d1822]';
 
-  const handlePointerDown = () => setPressed(true);
-  const handlePointerUp = () => {
-    // Keep fill visible briefly so the animation is readable on tap
-    window.setTimeout(() => setPressed(false), 280);
-  };
-
   return (
     <button
       type="button"
       {...rest}
       onClick={onClick}
-      onPointerDown={handlePointerDown}
-      onPointerUp={handlePointerUp}
+      onPointerDown={() => setPressed(true)}
+      onPointerUp={() => window.setTimeout(() => setPressed(false), 280)}
       onPointerLeave={() => setPressed(false)}
       onPointerCancel={() => setPressed(false)}
       className={`
         relative inline-flex items-center justify-center overflow-hidden
         rounded-full px-8 py-4 font-bold text-lg
-        transition-colors select-none
+        select-none
         ${shell}
         ${className}
       `}
     >
-      {/* Default label */}
       <span className="relative z-10">{children}</span>
 
-      {/* Fill layer + inverted label (clips as it expands L→R) */}
       <span
         aria-hidden
         className={`
-          absolute inset-0 z-20 origin-left overflow-hidden
-          transition-transform duration-350 ease-out
+          fill-layer absolute inset-0 z-20 origin-left overflow-hidden
+          transition-transform duration-300 ease-out
           ${fillBg}
-          fill-layer
           ${pressed ? 'scale-x-100' : 'scale-x-0'}
         `}
       >
@@ -81,7 +69,6 @@ export const FillButton: React.FC<FillButtonProps> = ({
   );
 };
 
-/** Same fill treatment for <a> tags */
 export const FillLink: React.FC<
   React.AnchorHTMLAttributes<HTMLAnchorElement> & {
     variant?: Variant;
@@ -117,10 +104,9 @@ export const FillLink: React.FC<
       <span
         aria-hidden
         className={`
-          absolute inset-0 z-20 origin-left overflow-hidden
-          transition-transform duration-350 ease-out
+          fill-layer absolute inset-0 z-20 origin-left overflow-hidden
+          transition-transform duration-300 ease-out
           ${fillBg}
-          fill-layer
           ${pressed ? 'scale-x-100' : 'scale-x-0'}
         `}
       >
