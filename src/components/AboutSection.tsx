@@ -22,12 +22,12 @@ export const AboutSection: React.FC = () => {
           </motion.div>
 
           <div className="space-y-6">
-            <motion.h2 variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="font-display text-7xl font-black tracking-tighter text-[#8e2d56]">This is who I am.</motion.h2>
-            <motion.p variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="text-xl leading-relaxed text-[#8e2d56]">
+            <motion.h2 variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="font-display text-7xl font-black tracking-tighter text-[#f3dfc6]">This is who I am.</motion.h2>
+            <motion.p variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="text-xl leading-relaxed text-[#f3dfc6]">
               Hi, I'm Jasmine. I bring stories to life with a dash of soul and a lot of grit. 
             </motion.p>
-            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="border-l-4 border-[#8e2d56] pl-6 py-2">
-              <p className="font-editorial text-2xl italic">"Every voice is a universe."</p>
+            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="border-l-4 border-[#f3dfc6] pl-6 py-2">
+              <p className="font-editorial text-2xl italic text-[#f3dfc6]">"Every voice is a universe."</p>
             </motion.div>
           </div>
           
