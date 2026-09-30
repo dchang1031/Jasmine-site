@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useInView } from 'framer-motion';
 
 interface AnimatedSectionProps {
   id: string;
@@ -8,9 +8,10 @@ interface AnimatedSectionProps {
 }
 
 /**
- * Full-viewport section with scroll-linked enter/exit animation.
- * - Enters from below (fade + rise)
- * - Exits upward and fades out early so it disappears before reaching the sticky nav
+ * Section transition:
+ * - Incoming section: fades in + rises from below
+ * - Outgoing section: quickly moves up + fades out while still on screen
+ *   (becomes invisible before reaching the sticky nav)
  */
 export const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   id,
@@ -18,37 +19,48 @@ export const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   className = '',
 }) => {
   const ref = useRef<HTMLElement>(null);
+  const [scrollDir, setScrollDir] = useState<'down' | 'up'>('down');
+  const lastY = useRef(0);
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    // 0 when section top hits bottom of viewport
-    // 1 when section bottom hits top of viewport
-    offset: ['start end', 'end start'],
+  // Trigger while a good portion is still visible so exit happens early
+  const isInView = useInView(ref, {
+    amount: 0.35,
+    once: false,
   });
 
-  // Tight ranges so the exit completes well before the section reaches the nav
-  // Enter: 0 → ~0.18 | Hold: ~0.18 → ~0.72 | Exit: ~0.72 → 1
-  const opacity = useTransform(
-    scrollYProgress,
-    [0, 0.14, 0.72, 0.92],
-    [0, 1, 1, 0]
-  );
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (Math.abs(y - lastY.current) > 4) {
+        setScrollDir(y > lastY.current ? 'down' : 'up');
+        lastY.current = y;
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
-  const y = useTransform(
-    scrollYProgress,
-    [0, 0.14, 0.72, 0.92],
-    [90, 0, 0, -110]
-  );
+  // When leaving: go UP if scrolling down, go DOWN if scrolling up
+  const exitY = scrollDir === 'down' ? -120 : 120;
 
   return (
     <section
       ref={ref}
       id={id}
-      className={`relative min-h-screen flex items-center snap-start snap-always ${className}`}
+      className={`relative min-h-screen flex items-center snap-start ${className}`}
     >
       <motion.div
-        style={{ opacity, y }}
-        className="w-full will-change-transform"
+        className="w-full"
+        initial={false}
+        animate={
+          isInView
+            ? { opacity: 1, y: 0, scale: 1 }
+            : { opacity: 0, y: exitY, scale: 0.98 }
+        }
+        transition={{
+          duration: 0.45,
+          ease: [0.22, 1, 0.36, 1], // quick, smooth
+        }}
       >
         {children}
       </motion.div>
