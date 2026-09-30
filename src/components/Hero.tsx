@@ -10,16 +10,16 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
   return (
     <section id="hero" className="relative pt-10 pb-20">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="flex flex-col md:flex-row items-center justify-center gap-0">
+        <div className="flex flex-col md:flex-row items-center gap-0">
           
-          {/* Editorial Text - Left */}
+          {/* Editorial Text - Center */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="w-full md:w-1/2 z-10"
+            className="w-full md:w-1/2 z-10 flex flex-col items-center md:items-center text-center md:text-center"
           >
-            <h1 className="font-display text-[96px] font-black tracking-tighter text-[#8e2d56] mb-6 leading-none">
+            <h1 className="font-display text-[120px] font-black tracking-tighter text-[#8e2d56] mb-6 leading-none">
               Hi, I'm Jasmine.
             </h1>
             <p className="text-xl font-medium text-[#8e2d56] mb-10 max-w-md">
@@ -40,7 +40,7 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="w-full md:w-1/2 flex justify-center md:justify-end -ml-20 md:ml-0 mt-32 md:mt-20"
+            className="w-full md:w-1/2 flex justify-center -ml-20 md:ml-0 mt-32 md:mt-20"
           >
             <img 
               src="/src/assets/images/hero_jasmine_portrait_1790733232771.jpg" 
