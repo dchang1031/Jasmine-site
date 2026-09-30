@@ -19,14 +19,14 @@ const SAMPLES: SampleVideo[] = [
   },
 ];
 
-/** Rounded-corner play triangle via SVG */
+/** Large rounded-corner play triangle */
 const RoundedPlayTriangle = () => (
   <svg
-    width="28"
-    height="32"
+    width="48"
+    height="54"
     viewBox="0 0 28 32"
     fill="none"
-    className="ml-1 drop-shadow-md"
+    className="ml-1.5 drop-shadow-md"
     aria-hidden
   >
     <path
@@ -55,29 +55,21 @@ const ArtisticPlayButton: React.FC<{ playing: boolean; onClick: () => void }> = 
         relative flex items-center justify-center
         w-[88px] h-[88px] md:w-[100px] md:h-[100px]
         bg-[#825260]/90 backdrop-blur-sm
-        border-2 border-[#f3dfc6]/55
         shadow-[0_8px_28px_rgba(0,0,0,0.35)]
         transition-all duration-300
-        group-hover:scale-110 group-hover:border-[#f3dfc6] group-hover:bg-[#825260]
+        group-hover:scale-110 group-hover:bg-[#825260]
         ${
           playing ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'
         }
       `}
       style={{
-        /* Irregular organic shape — not a circle */
         borderRadius: '58% 42% 55% 45% / 48% 52% 42% 58%',
       }}
     >
-      {/* Soft secondary blob outline for extra character */}
-      <span
-        className="absolute inset-[-5px] border border-[#f3dfc6]/25 pointer-events-none"
-        style={{ borderRadius: '48% 52% 42% 58% / 58% 42% 55% 45%' }}
-      />
-
       {playing ? (
-        <span className="flex gap-1.5">
-          <span className="w-2.5 h-7 bg-[#f3dfc6] rounded-full" />
-          <span className="w-2.5 h-7 bg-[#f3dfc6] rounded-full" />
+        <span className="flex gap-2">
+          <span className="w-3 h-9 bg-[#f3dfc6] rounded-full" />
+          <span className="w-3 h-9 bg-[#f3dfc6] rounded-full" />
         </span>
       ) : (
         <RoundedPlayTriangle />
@@ -112,7 +104,7 @@ const SampleCard: React.FC<{ sample: SampleVideo; align: 'left' | 'right' }> = (
         align === 'left' ? 'self-start' : 'self-end'
       }`}
     >
-      <div className="relative overflow-hidden rounded-[32px] bg-[#825260] shadow-xl border border-[#f3dfc6]/15 aspect-video">
+      <div className="relative overflow-hidden rounded-[32px] bg-[#825260] shadow-xl aspect-video">
         <video
           ref={videoRef}
           src={sample.src}
