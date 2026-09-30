@@ -10,7 +10,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onDirectBooking }) => {
 
   return (
     <header className="sticky top-4 z-40 mx-4 bg-[#8e2d56] rounded-full shadow-lg">
-      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <div className="max-w-[1024px] mx-auto px-6 h-20 flex items-center justify-between">
         
         {/* Brand */}
         <a href="#hero" className="font-display text-4xl font-black text-white">
@@ -29,7 +29,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onDirectBooking }) => {
 
         {/* Mobile toggle */}
         <button className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-          {mobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
+          {mobileMenuOpen ? <X className="w-8 h-8 text-white" /> : <Menu className="w-8 h-8 text-white" />}
         </button>
       </div>
     </header>
