@@ -1,16 +1,12 @@
 import React from 'react';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
+import { media } from '../assets/media';
 
 interface AboutSectionProps {
-  /** 0 = title only, 1–3 = images revealed, 4 = images gone + final copy */
   step: number;
 }
 
-const WORK_IMAGES = [
-  '/src/assets/images/work1.jpg',
-  '/src/assets/images/work2.jpg',
-  '/src/assets/images/work3.jpg',
-];
+const WORK_IMAGES = [media.work1, media.work2, media.work3];
 
 const IMAGE_TRANSITION = {
   duration: 0.7,
@@ -24,7 +20,6 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ step }) => {
 
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-center px-6">
-      {/* Title — behind the images */}
       <AnimatePresence mode="wait">
         {!showFinal ? (
           <motion.h2
@@ -56,7 +51,6 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ step }) => {
         )}
       </AnimatePresence>
 
-      {/* Work images — layout animates existing items smoothly when a new one joins */}
       <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
         <LayoutGroup>
           <div className="flex items-end justify-center gap-4 md:gap-8 px-4 w-full max-w-5xl">
@@ -95,5 +89,4 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ step }) => {
   );
 };
 
-/** Number of internal steps in the about section (0..4 inclusive = 5 steps) */
 export const ABOUT_MAX_STEP = 4;
