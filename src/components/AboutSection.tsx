@@ -75,7 +75,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ step }) => {
                     <img
                       src={src}
                       alt={`Project ${i + 1}`}
-                      className="w-full h-full object-cover rounded-[24px] shadow-2xl border-2 border-[#f3dfc6]/20"
+                      className="w-full h-full object-cover rounded-[24px] shadow-2xl"
                     />
                   </motion.div>
                 )}
