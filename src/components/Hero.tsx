@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, useAnimationControls } from 'framer-motion';
 
 interface HeroProps {
   onScrollToSamples: () => void;
@@ -14,22 +14,35 @@ const heroImages = [
 
 export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking }) => {
   const [currentImage, setCurrentImage] = useState(0);
-  const [shakeKey, setShakeKey] = useState(0);
+  const floatControls = useAnimationControls();
 
+  // Image carousel — runs independently of motion tree
   useEffect(() => {
     const interval = window.setInterval(() => {
       setCurrentImage((index) => (index + 1) % heroImages.length);
-      setShakeKey((k) => k + 1);
     }, 3000);
-
     return () => window.clearInterval(interval);
   }, []);
 
-  // Trigger first shake shortly after mount
+  // Explicitly start the float loop after mount so it isn't blocked by the
+  // parent full-page AnimatePresence enter (which prevented it on first load).
   useEffect(() => {
-    const t = window.setTimeout(() => setShakeKey(1), 400);
-    return () => window.clearTimeout(t);
-  }, []);
+    let cancelled = false;
+    const start = () => {
+      if (cancelled) return;
+      floatControls.start({
+        y: [0, -10, 0],
+        transition: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
+      });
+    };
+    // Double rAF: wait until after the first paint / parent layout
+    const id = requestAnimationFrame(() => requestAnimationFrame(start));
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(id);
+      floatControls.stop();
+    };
+  }, [floatControls]);
 
   return (
     <div className="flex flex-col items-center w-full pb-10">
@@ -43,17 +56,18 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
         >
           <h1 className="font-display text-[120px] font-black tracking-tighter text-[#f3dfc6] mb-6 leading-none">
             Hi, I'm{' '}
+            {/* Continuous shake loop (shake → rest → shake) — no remount needed */}
             <motion.span
-              key={shakeKey}
               className="inline-block origin-bottom"
               initial={{ rotate: 0 }}
               animate={{
-                rotate: [0, -4, 5, -3, 4, -2, 1, 0],
+                rotate: [0, -4, 5, -3, 4, -2, 1, 0, 0, 0, 0, 0],
               }}
               transition={{
-                duration: 0.9,
+                duration: 3,
                 ease: 'easeInOut',
-                times: [0, 0.12, 0.28, 0.42, 0.58, 0.72, 0.88, 1],
+                times: [0, 0.04, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.5, 0.7, 0.85, 1],
+                repeat: Infinity,
               }}
             >
               Jasmine
@@ -88,8 +102,8 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
         >
           <motion.div
             className="relative w-[350px] h-[500px] overflow-hidden card-rounded"
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            initial={{ y: 0 }}
+            animate={floatControls}
           >
             <AnimatePresence initial={false} mode="sync">
               <motion.img
