@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useAnimationControls } from 'framer-motion';
+import { FillButton } from './FillButton';
 
 interface HeroProps {
   onScrollToSamples: () => void;
@@ -16,7 +17,6 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
   const [currentImage, setCurrentImage] = useState(0);
   const floatControls = useAnimationControls();
 
-  // Image carousel — runs independently of motion tree
   useEffect(() => {
     const interval = window.setInterval(() => {
       setCurrentImage((index) => (index + 1) % heroImages.length);
@@ -24,18 +24,15 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
     return () => window.clearInterval(interval);
   }, []);
 
-  // Explicitly start the float loop after mount so it isn't blocked by the
-  // parent full-page AnimatePresence enter (which prevented it on first load).
   useEffect(() => {
     let cancelled = false;
     const start = () => {
       if (cancelled) return;
       floatControls.start({
-        y: [0, -10, 0],
+        y: [0, -8, 0],
         transition: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
       });
     };
-    // Double rAF: wait until after the first paint / parent layout
     const id = requestAnimationFrame(() => requestAnimationFrame(start));
     return () => {
       cancelled = true;
@@ -45,18 +42,48 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
   }, [floatControls]);
 
   return (
-    <div className="flex flex-col items-center w-full pb-10">
-      <div className="flex flex-col md:flex-row items-center gap-0 max-w-7xl px-6">
-        {/* Editorial Text */}
+    <div className="w-full h-full flex items-center justify-center px-5 md:px-6">
+      {/*
+        Mobile order: image → header → body → buttons (flex-col)
+        Desktop: text left, image right (flex-row)
+      */}
+      <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-0 max-w-7xl w-full">
+        {/* Image — first on mobile (order-1), second on desktop (order-2) */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="order-1 md:order-2 w-full md:w-1/2 flex justify-center"
+        >
+          <motion.div
+            className="relative w-[200px] h-[280px] sm:w-[240px] sm:h-[340px] md:w-[350px] md:h-[500px] overflow-hidden card-rounded shrink-0"
+            initial={{ y: 0 }}
+            animate={floatControls}
+          >
+            <AnimatePresence initial={false} mode="sync">
+              <motion.img
+                key={heroImages[currentImage]}
+                src={heroImages[currentImage]}
+                alt="Jasmine"
+                className="absolute inset-0 w-full h-full object-cover"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.45, ease: 'easeInOut' }}
+              />
+            </AnimatePresence>
+          </motion.div>
+        </motion.div>
+
+        {/* Text block — second on mobile (order-2), first on desktop (order-1) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="w-full md:w-1/2 z-10 flex flex-col items-center text-center"
+          className="order-2 md:order-1 w-full md:w-1/2 z-10 flex flex-col items-center text-center"
         >
-          <h1 className="font-display text-[120px] font-black tracking-tighter text-[#f3dfc6] mb-6 leading-none">
+          <h1 className="font-display text-[42px] sm:text-[56px] md:text-[90px] lg:text-[120px] font-black tracking-tighter text-[#f3dfc6] mb-3 md:mb-6 leading-[0.95]">
             Hi, I'm{' '}
-            {/* Continuous shake loop (shake → rest → shake) — no remount needed */}
             <motion.span
               className="inline-block origin-bottom"
               initial={{ rotate: 0 }}
@@ -74,50 +101,19 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
             </motion.span>
             .
           </h1>
-          <p className="text-xl font-medium text-[#f3dfc6] mb-10 max-w-md">
+
+          <p className="text-base sm:text-lg md:text-xl font-medium text-[#f3dfc6] mb-5 md:mb-10 max-w-md leading-snug">
             I am a voice actress who brings characters to life with grit, soul, and a splash of magic.
           </p>
-          <div className="flex gap-4">
-            <button
-              onClick={onScrollToSamples}
-              className="bg-[#f3dfc6] text-[#6d1822] px-8 py-4 font-bold text-lg hover:bg-gray-100 rounded-full"
-            >
-              Listen Now
-            </button>
-            <button
-              onClick={onScrollToBooking}
-              className="border-2 border-[#f3dfc6] text-[#f3dfc6] px-8 py-4 font-bold text-lg hover:bg-[#f3dfc6] hover:text-[#6d1822] rounded-full"
-            >
-              Book
-            </button>
-          </div>
-        </motion.div>
 
-        {/* Image */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="w-full md:w-1/2 flex justify-center -ml-20 md:ml-0 mt-32 md:mt-20"
-        >
-          <motion.div
-            className="relative w-[350px] h-[500px] overflow-hidden card-rounded"
-            initial={{ y: 0 }}
-            animate={floatControls}
-          >
-            <AnimatePresence initial={false} mode="sync">
-              <motion.img
-                key={heroImages[currentImage]}
-                src={heroImages[currentImage]}
-                alt="Jasmine"
-                className="absolute inset-0 w-full h-full object-cover"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.45, ease: 'easeInOut' }}
-              />
-            </AnimatePresence>
-          </motion.div>
+          <div className="flex flex-wrap gap-3 md:gap-4 justify-center">
+            <FillButton variant="solid" onClick={onScrollToSamples} className="!px-6 !py-3 md:!px-8 md:!py-4 text-base md:text-lg">
+              Listen Now
+            </FillButton>
+            <FillButton variant="outline" onClick={onScrollToBooking} className="!px-6 !py-3 md:!px-8 md:!py-4 text-base md:text-lg">
+              Book
+            </FillButton>
+          </div>
         </motion.div>
       </div>
     </div>
