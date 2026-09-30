@@ -18,26 +18,26 @@ const TRANSITION = {
 export default function App() {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1); // 1 = down/next, -1 = up/prev
+  const indexRef = useRef(0);
   const locked = useRef(false);
   const touchStartY = useRef<number | null>(null);
 
-  const goTo = useCallback(
-    (next: number) => {
-      if (locked.current) return;
-      const clamped = Math.max(0, Math.min(SECTION_IDS.length - 1, next));
-      if (clamped === index) return;
+  indexRef.current = index;
 
-      locked.current = true;
-      setDirection(clamped > index ? 1 : -1);
-      setIndex(clamped);
+  const goTo = useCallback((next: number) => {
+    if (locked.current) return;
+    const current = indexRef.current;
+    const clamped = Math.max(0, Math.min(SECTION_IDS.length - 1, next));
+    if (clamped === current) return;
 
-      // Unlock after the transition finishes
-      window.setTimeout(() => {
-        locked.current = false;
-      }, TRANSITION.duration * 1000 + 50);
-    },
-    [index]
-  );
+    locked.current = true;
+    setDirection(clamped > current ? 1 : -1);
+    setIndex(clamped);
+
+    window.setTimeout(() => {
+      locked.current = false;
+    }, TRANSITION.duration * 1000 + 50);
+  }, []);
 
   const goToId = useCallback(
     (id: SectionId) => {
@@ -53,16 +53,15 @@ export default function App() {
       e.preventDefault();
       if (locked.current) return;
 
-      // Require a meaningful delta so small trackpad jitter doesn't fire
-      if (e.deltaY > 12) goTo(index + 1);
-      else if (e.deltaY < -12) goTo(index - 1);
+      if (e.deltaY > 12) goTo(indexRef.current + 1);
+      else if (e.deltaY < -12) goTo(indexRef.current - 1);
     };
 
     window.addEventListener('wheel', onWheel, { passive: false });
     return () => window.removeEventListener('wheel', onWheel);
-  }, [goTo, index]);
+  }, [goTo]);
 
-  // Touch swipe (phone + trackpad gestures that surface as touch)
+  // Touch swipe
   useEffect(() => {
     const onTouchStart = (e: TouchEvent) => {
       touchStartY.current = e.touches[0].clientY;
@@ -73,9 +72,9 @@ export default function App() {
       const dy = touchStartY.current - e.changedTouches[0].clientY;
       touchStartY.current = null;
 
-      if (Math.abs(dy) < 40) return; // ignore tiny moves
-      if (dy > 0) goTo(index + 1); // swipe up → next
-      else goTo(index - 1); // swipe down → prev
+      if (Math.abs(dy) < 40) return;
+      if (dy > 0) goTo(indexRef.current + 1);
+      else goTo(indexRef.current - 1);
     };
 
     window.addEventListener('touchstart', onTouchStart, { passive: true });
@@ -84,37 +83,36 @@ export default function App() {
       window.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('touchend', onTouchEnd);
     };
-  }, [goTo, index]);
+  }, [goTo]);
 
   // Keyboard
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown' || e.key === 'PageDown') {
         e.preventDefault();
-        goTo(index + 1);
+        goTo(indexRef.current + 1);
       } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
         e.preventDefault();
-        goTo(index - 1);
+        goTo(indexRef.current - 1);
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [goTo, index]);
+  }, [goTo]);
 
   // Lock native document scroll
   useEffect(() => {
-    const prev = document.documentElement.style.overflow;
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
     return () => {
-      document.documentElement.style.overflow = prev;
+      document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
     };
   }, []);
 
   const variants = {
     enter: (dir: number) => ({
-      y: dir > 0 ? '55%' : '-55%',
+      y: dir > 0 ? '50%' : '-50%',
       opacity: 0,
     }),
     center: {
@@ -122,7 +120,7 @@ export default function App() {
       opacity: 1,
     },
     exit: (dir: number) => ({
-      y: dir > 0 ? '-45%' : '45%',
+      y: dir > 0 ? '-40%' : '40%',
       opacity: 0,
     }),
   };
@@ -149,8 +147,8 @@ export default function App() {
         onDirectBooking={() => goToId('booking')}
       />
 
-      {/* Section stage — sits below the sticky nav, never scrolls under it */}
-      <div className="relative h-screen pt-28 box-border overflow-hidden">
+      {/* Full-viewport stage. Content never scrolls under the nav. */}
+      <div className="relative h-screen overflow-hidden">
         <AnimatePresence initial={false} custom={direction} mode="sync">
           <motion.div
             key={currentId}
@@ -160,7 +158,7 @@ export default function App() {
             animate="center"
             exit="exit"
             transition={TRANSITION}
-            className="absolute inset-0 pt-28 flex items-center justify-center overflow-hidden"
+            className="absolute inset-0 pt-28 box-border flex items-center justify-center"
           >
             <div className="w-full h-full flex items-center justify-center overflow-y-auto">
               {sections[currentId]}
