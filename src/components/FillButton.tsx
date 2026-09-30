@@ -9,9 +9,8 @@ interface FillButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
 }
 
 /**
- * Button with left→right fill animation.
- * Filled portion uses inverted text/button colors.
- * Desktop: hover only | Mobile: press/click only
+ * Left→right background fill. One text element stays in place;
+ * text color inverts on hover (desktop) / press (mobile).
  */
 export const FillButton: React.FC<FillButtonProps> = ({
   variant = 'solid',
@@ -21,15 +20,20 @@ export const FillButton: React.FC<FillButtonProps> = ({
   ...rest
 }) => {
   const [pressed, setPressed] = useState(false);
-
   const isSolid = variant === 'solid';
 
+  // Default surface
   const shell = isSolid
-    ? 'bg-[#f3dfc6] text-[#6d1822] border-2 border-[#f3dfc6]'
-    : 'bg-transparent text-[#f3dfc6] border-2 border-[#f3dfc6]';
+    ? 'bg-[#f3dfc6] border-2 border-[#f3dfc6]'
+    : 'bg-transparent border-2 border-[#f3dfc6]';
 
+  // Default text color
+  const textDefault = isSolid ? 'text-[#6d1822]' : 'text-[#f3dfc6]';
+  // Inverted text color when filled
+  const textFilled = isSolid ? 'text-[#f3dfc6]' : 'text-[#6d1822]';
+
+  // Fill background color
   const fillBg = isSolid ? 'bg-[#6d1822]' : 'bg-[#f3dfc6]';
-  const fillText = isSolid ? 'text-[#f3dfc6]' : 'text-[#6d1822]';
 
   return (
     <button
@@ -37,33 +41,37 @@ export const FillButton: React.FC<FillButtonProps> = ({
       {...rest}
       onClick={onClick}
       onPointerDown={() => setPressed(true)}
-      onPointerUp={() => window.setTimeout(() => setPressed(false), 280)}
+      onPointerUp={() => window.setTimeout(() => setPressed(false), 220)}
       onPointerLeave={() => setPressed(false)}
       onPointerCancel={() => setPressed(false)}
       className={`
-        relative inline-flex items-center justify-center overflow-hidden
-        rounded-full px-8 py-4 font-bold text-lg
-        select-none
+        fill-btn group relative inline-flex items-center justify-center overflow-hidden
+        rounded-full px-8 py-4 font-bold text-lg select-none
         ${shell}
         ${className}
       `}
     >
-      <span className="relative z-10">{children}</span>
-
+      {/* Background fill — expands L→R, sits behind text */}
       <span
         aria-hidden
         className={`
-          fill-layer absolute inset-0 z-20 origin-left overflow-hidden
+          fill-layer absolute inset-0 z-0 origin-left
           transition-transform duration-300 ease-out
           ${fillBg}
-          ${pressed ? 'scale-x-100' : 'scale-x-0'}
+          ${pressed ? 'is-pressed' : ''}
+        `}
+      />
+
+      {/* Single text element — stays in place, color inverts when filled */}
+      <span
+        className={`
+          relative z-10 transition-colors duration-300 ease-out
+          ${textDefault}
+          fill-btn-label
+          ${pressed ? textFilled : ''}
         `}
       >
-        <span
-          className={`absolute inset-0 flex items-center justify-center whitespace-nowrap px-8 font-bold text-lg ${fillText}`}
-        >
-          {children}
-        </span>
+        {children}
       </span>
     </button>
   );
@@ -80,41 +88,44 @@ export const FillLink: React.FC<
   const isSolid = variant === 'solid';
 
   const shell = isSolid
-    ? 'bg-[#f3dfc6] text-[#6d1822] border-2 border-[#f3dfc6]'
-    : 'bg-transparent text-[#f3dfc6] border-2 border-[#f3dfc6]';
+    ? 'bg-[#f3dfc6] border-2 border-[#f3dfc6]'
+    : 'bg-transparent border-2 border-[#f3dfc6]';
 
+  const textDefault = isSolid ? 'text-[#6d1822]' : 'text-[#f3dfc6]';
+  const textFilled = isSolid ? 'text-[#f3dfc6]' : 'text-[#6d1822]';
   const fillBg = isSolid ? 'bg-[#6d1822]' : 'bg-[#f3dfc6]';
-  const fillText = isSolid ? 'text-[#f3dfc6]' : 'text-[#6d1822]';
 
   return (
     <a
       {...rest}
       onPointerDown={() => setPressed(true)}
-      onPointerUp={() => window.setTimeout(() => setPressed(false), 280)}
+      onPointerUp={() => window.setTimeout(() => setPressed(false), 220)}
       onPointerLeave={() => setPressed(false)}
       className={`
-        relative inline-flex items-center justify-center overflow-hidden
-        rounded-full px-8 py-4 font-bold text-lg
-        select-none
+        fill-btn group relative inline-flex items-center justify-center overflow-hidden
+        rounded-full px-8 py-4 font-bold text-lg select-none
         ${shell}
         ${className}
       `}
     >
-      <span className="relative z-10">{children}</span>
       <span
         aria-hidden
         className={`
-          fill-layer absolute inset-0 z-20 origin-left overflow-hidden
+          fill-layer absolute inset-0 z-0 origin-left
           transition-transform duration-300 ease-out
           ${fillBg}
-          ${pressed ? 'scale-x-100' : 'scale-x-0'}
+          ${pressed ? 'is-pressed' : ''}
+        `}
+      />
+      <span
+        className={`
+          relative z-10 transition-colors duration-300 ease-out
+          ${textDefault}
+          fill-btn-label
+          ${pressed ? textFilled : ''}
         `}
       >
-        <span
-          className={`absolute inset-0 flex items-center justify-center whitespace-nowrap px-8 font-bold text-lg ${fillText}`}
-        >
-          {children}
-        </span>
+        {children}
       </span>
     </a>
   );
