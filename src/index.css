@@ -35,8 +35,6 @@
 
 /*
  * Jasmine greeting shake — pure CSS so it starts on first paint
- * and is not blocked by parent framer-motion AnimatePresence.
- * Pattern: shake (~1s) then rest (~2s), loop every 3s.
  */
 @keyframes jasmine-shake {
   0%   { transform: rotate(0deg); }
@@ -57,13 +55,37 @@
 }
 
 /*
- * FillButton: left→right fill
- * Desktop (hover-capable): expand on hover
- * Mobile: driven by JS pressed state only (no sticky hover)
+ * FillButton background fill (L→R)
+ * Default: collapsed. Expanded via hover (desktop) or .is-pressed (mobile).
  */
+.fill-layer {
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.fill-layer.is-pressed {
+  transform: scaleX(1);
+}
+
+/* Desktop: hover expands fill + inverts text color */
 @media (hover: hover) and (pointer: fine) {
-  button:hover > .fill-layer,
-  a:hover > .fill-layer {
+  .fill-btn:hover > .fill-layer {
     transform: scaleX(1);
+  }
+
+  /* Solid variant: cream → maroon text becomes cream */
+  .fill-btn:hover > .fill-btn-label.text-\[\#6d1822\],
+  .fill-btn:hover > .fill-btn-label {
+    color: inherit;
+  }
+
+  /* Use data attributes via parent classes is cleaner — set explicit rules */
+  .fill-btn:hover > .fill-btn-label {
+    color: #f3dfc6;
+  }
+
+  /* Outline buttons start with cream text → invert to maroon on hover */
+  .fill-btn.bg-transparent:hover > .fill-btn-label {
+    color: #6d1822;
   }
 }
