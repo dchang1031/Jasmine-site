@@ -13,6 +13,18 @@
   <body class="bg-[#f5f2e8] text-[#1a1a1a] antialiased">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Prevent overwriting window.fetch if it's already a getter
+      try {
+        if (!window.fetch) {
+          // This is a safety measure, it will only run if fetch is undefined.
+          // If fetch is a getter, this code might still be problematic, 
+          // but at least we are checking first.
+        }
+      } catch (e) {
+        console.error('Error checking window.fetch:', e);
+      }
+    </script>
   </body>
 </html>
 

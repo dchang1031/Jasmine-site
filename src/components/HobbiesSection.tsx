@@ -4,7 +4,7 @@ export const HobbiesSection: React.FC = () => {
   return (
     <section id="hobbies" className="py-20">
       <div className="max-w-7xl mx-auto px-6">
-        <h2 className="font-display text-7xl font-black tracking-tighter mb-16 text-[#2d0a2a]">Hobbies</h2>
+        <h2 className="font-display text-7xl font-black tracking-tighter mb-16 text-[#8e2d56]">What I love to do outside of work.</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* DnD Card */}

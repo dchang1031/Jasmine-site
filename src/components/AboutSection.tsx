@@ -1,27 +1,37 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 export const AboutSection: React.FC = () => {
   return (
     <section id="about" className="py-20">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center bg-[#f3e5f5] p-8 card-rounded">
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
+          }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center bg-[#ebd7da] p-8 card-rounded"
+        >
           
-          <div className="relative">
+          <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="relative">
              <img src="/src/assets/images/bio_studio_microphone_1790733243013.jpg" alt="Studio" className="w-full h-auto aspect-video object-cover rounded-[40px]" />
              <div className="sticker absolute -bottom-8 -left-8 bg-[#8e2d56] text-white w-28 h-28 rounded-blob flex items-center justify-center font-bold">NEW!</div>
-          </div>
+          </motion.div>
 
           <div className="space-y-6">
-            <h2 className="font-display text-7xl font-black tracking-tighter text-[#2d0a2a]">About</h2>
-            <p className="text-xl leading-relaxed text-[#2d0a2a]">
+            <motion.h2 variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="font-display text-7xl font-black tracking-tighter text-[#8e2d56]">This is who I am.</motion.h2>
+            <motion.p variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="text-xl leading-relaxed text-[#8e2d56]">
               Hi, I’m Jasmine. I bring stories to life with a dash of soul and a lot of grit. 
-            </p>
-            <div className="border-l-4 border-[#8e2d56] pl-6 py-2">
+            </motion.p>
+            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="border-l-4 border-[#8e2d56] pl-6 py-2">
               <p className="font-editorial text-2xl italic">"Every voice is a universe."</p>
-            </div>
+            </motion.div>
           </div>
-
-        </div>
+          
+        </motion.div>
       </div>
     </section>
   );

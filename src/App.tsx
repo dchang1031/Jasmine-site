@@ -15,7 +15,7 @@ export default function App() {
   };
 
   return (
-    <div className="bg-[#f5f2e8] text-[#1a1a1a] selection:bg-[#e65c26] selection:text-white">
+    <div className="bg-[#ebd7da] text-[#1a1a1a] selection:bg-[#e65c26] selection:text-white">
       <Navbar onDirectBooking={() => scrollTo('booking')} />
       <main>
         <Hero

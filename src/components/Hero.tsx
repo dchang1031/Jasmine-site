@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 interface HeroProps {
   onScrollToSamples: () => void;
@@ -9,23 +10,19 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
   return (
     <section id="hero" className="relative pt-10 pb-20">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="flex flex-col md:flex-row items-center gap-8">
+        <div className="flex flex-col md:flex-row items-center gap-0">
           
-          {/* Image Container */}
-          <div className="w-full md:w-2/3 z-0">
-            <img 
-              src="/src/assets/images/hero_jasmine_portrait_1790733232771.jpg" 
-              alt="Jasmine" 
-              className="w-[350px] h-[500px] object-cover card-rounded" 
-            />
-          </div>
-
-          {/* Editorial Text Card - partially overlapping */}
-          <div className="w-full md:w-1/2 md:-ml-24 p-10 bg-[#f8f1f9] card-rounded border border-[#8e2d56]/20 shadow-xl z-10">
-            <h1 className="font-display text-7xl font-black tracking-tighter text-[#2d0a2a] mb-6">
+          {/* Editorial Text - Left */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="w-full md:w-1/2 z-10"
+          >
+            <h1 className="font-display text-[96px] font-black tracking-tighter text-[#8e2d56] mb-6 leading-none">
               Hi, I'm Jasmine.
             </h1>
-            <p className="text-xl font-medium text-[#2d0a2a] mb-10">
+            <p className="text-xl font-medium text-[#8e2d56] mb-10 max-w-md">
               I am a voice actress who brings characters to life with grit, soul, and a splash of magic.
             </p>
             <div className="flex gap-4">
@@ -36,7 +33,21 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
                 Book
               </button>
             </div>
-          </div>
+          </motion.div>
+
+          {/* Image - Right */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="w-full md:w-1/2 flex justify-start -ml-20 mt-32"
+          >
+            <img 
+              src="/src/assets/images/hero_jasmine_portrait_1790733232771.jpg" 
+              alt="Jasmine" 
+              className="w-[350px] h-[500px] object-cover card-rounded" 
+            />
+          </motion.div>
           
         </div>
       </div>
