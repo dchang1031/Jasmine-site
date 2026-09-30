@@ -1,5 +1,5 @@
 import React from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 
 interface AboutSectionProps {
   /** 0 = title only, 1–3 = images revealed, 4 = images gone + final copy */
@@ -56,20 +56,27 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ step }) => {
         )}
       </AnimatePresence>
 
-      {/* Work images — on top of the text */}
+      {/* Work images — layout animates existing items smoothly when a new one joins */}
       <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
-        <div className="flex items-end justify-center gap-4 md:gap-8 px-4 w-full max-w-5xl">
-          {WORK_IMAGES.map((src, i) => {
-            const isVisible = showImages && i < visibleCount;
-            return (
-              <AnimatePresence key={src}>
-                {isVisible && (
+        <LayoutGroup>
+          <div className="flex items-end justify-center gap-4 md:gap-8 px-4 w-full max-w-5xl">
+            <AnimatePresence>
+              {WORK_IMAGES.map((src, i) => {
+                if (!(showImages && i < visibleCount)) return null;
+                return (
                   <motion.div
-                    initial={{ opacity: 0, y: '50%' }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: '-40%' }}
-                    transition={IMAGE_TRANSITION}
-                    className="flex-1 max-w-[200px] md:max-w-[240px]"
+                    key={src}
+                    layout
+                    initial={{ opacity: 0, y: 80, scale: 0.92 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -60, scale: 0.95 }}
+                    transition={{
+                      layout: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+                      opacity: { duration: 0.5 },
+                      y: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
+                      scale: { duration: 0.55 },
+                    }}
+                    className="flex-1 max-w-[160px] sm:max-w-[200px] md:max-w-[240px]"
                     style={{ aspectRatio: '3 / 4' }}
                   >
                     <img
@@ -78,11 +85,11 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ step }) => {
                       className="w-full h-full object-cover rounded-[24px] shadow-2xl"
                     />
                   </motion.div>
-                )}
-              </AnimatePresence>
-            );
-          })}
-        </div>
+                );
+              })}
+            </AnimatePresence>
+          </div>
+        </LayoutGroup>
       </div>
     </div>
   );
