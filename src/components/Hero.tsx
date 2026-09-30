@@ -43,12 +43,8 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
 
   return (
     <div className="w-full h-full flex items-center justify-center px-5 md:px-6">
-      {/*
-        Mobile order: image → header → body → buttons (flex-col)
-        Desktop: text left, image right (flex-row)
-      */}
       <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-0 max-w-7xl w-full">
-        {/* Image — first on mobile (order-1), second on desktop (order-2) */}
+        {/* Image — first on mobile */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -75,7 +71,7 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
           </motion.div>
         </motion.div>
 
-        {/* Text block — second on mobile (order-2), first on desktop (order-1) */}
+        {/* Text — second on mobile */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -84,21 +80,8 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
         >
           <h1 className="font-display text-[42px] sm:text-[56px] md:text-[90px] lg:text-[120px] font-black tracking-tighter text-[#f3dfc6] mb-3 md:mb-6 leading-[0.95]">
             Hi, I'm{' '}
-            <motion.span
-              className="inline-block origin-bottom"
-              initial={{ rotate: 0 }}
-              animate={{
-                rotate: [0, -4, 5, -3, 4, -2, 1, 0, 0, 0, 0, 0],
-              }}
-              transition={{
-                duration: 3,
-                ease: 'easeInOut',
-                times: [0, 0.04, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.5, 0.7, 0.85, 1],
-                repeat: Infinity,
-              }}
-            >
-              Jasmine
-            </motion.span>
+            {/* CSS animation — not blocked by parent framer-motion tree */}
+            <span className="inline-block origin-bottom jasmine-shake">Jasmine</span>
             .
           </h1>
 
