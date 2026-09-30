@@ -17,15 +17,14 @@ const TRANSITION = {
 };
 
 /**
- * Section backgrounds — same purple/maroon family as hero (#6d1822),
- * tuned so cream text (#f3dfc6) and nav (#825260) still read clearly.
- * Transitions are intentionally slow/soft.
+ * Section backgrounds — purple/maroon family, cream text + nav still readable.
+ * Samples (warm rose-maroon) vs Hobbies (cool deep purple) are intentionally far apart.
  */
 const SECTION_BG: Record<SectionId, string> = {
-  hero: '#6d1822', // deep wine (original)
+  hero: '#6d1822', // deep wine
   about: '#5a1a38', // berry plum
-  samples: '#4a1745', // muted violet-maroon
-  hobbies: '#3d1f4a', // soft indigo-plum
+  samples: '#6b2040', // warm rose-maroon
+  hobbies: '#2a1a4a', // cool deep purple
   booking: '#521c2e', // dusty rosewood
 };
 
