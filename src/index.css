@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-light-purple: #f3e5f5;
+    --text-dark: #2d0a2a;
+    --accent-maroon: #8e2d56;
+    --accent-purple: #a6519b;
+  }
+  body {
+    background-color: var(--bg-light-purple);
+    color: var(--text-dark);
+  }
+}
+
+/* Typography Helpers */
+.font-display {
+  font-family: 'Fredoka', system-ui, sans-serif;
+  font-weight: 700;
+}
+
+/* Rounded containers */
+.rounded-blob {
+  border-radius: 60% 40% 70% 30% / 40% 70% 30% 60%;
+}
+
+.card-rounded {
+  border-radius: 40px;
+}
