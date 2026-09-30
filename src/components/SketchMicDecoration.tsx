@@ -2,76 +2,65 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 /**
- * Sketch-style microphone with cute radiating sound waves.
- * Mic shakes in a greeting wave (same rhythm as the "Jasmine" text).
- * Loops continuously while visible.
+ * Sketch-style handheld mic (matches reference doodle).
+ * - Mic body shakes like the "Jasmine" greeting text
+ * - Sound lines above the head pulse / draw on independently
  */
 export const SketchMicDecoration: React.FC = () => {
   return (
     <motion.div
-      className="pointer-events-none fixed bottom-6 left-6 z-30 w-[120px] h-[140px] md:w-[150px] md:h-[170px]"
+      className="pointer-events-none fixed bottom-4 left-4 z-30 w-[130px] h-[180px] md:w-[160px] md:h-[220px]"
       initial={{ opacity: 0, scale: 0.85 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.85 }}
       transition={{ duration: 0.5 }}
     >
       <svg
-        viewBox="0 0 120 140"
+        viewBox="0 0 100 150"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="w-full h-full overflow-visible"
       >
-        {/* Radiating sound waves — expand and fade in a loop */}
-        {[0, 1, 2].map((i) => (
-          <motion.g key={i}>
-            {/* Right-side arcs */}
-            <motion.path
-              d="M78 48 C92 42, 100 55, 100 70 C100 85, 92 98, 78 92"
-              stroke="#f3dfc6"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              fill="none"
-              initial={{ opacity: 0, scale: 0.7 }}
-              animate={{
-                opacity: [0, 0.7, 0],
-                scale: [0.75, 1.15, 1.35],
-              }}
-              transition={{
-                duration: 2.4,
-                delay: i * 0.7,
-                repeat: Infinity,
-                ease: 'easeOut',
-              }}
-              style={{ transformOrigin: '70px 70px' }}
-            />
-            {/* Left-side arcs */}
-            <motion.path
-              d="M42 48 C28 42, 20 55, 20 70 C20 85, 28 98, 42 92"
-              stroke="#f3dfc6"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              fill="none"
-              initial={{ opacity: 0, scale: 0.7 }}
-              animate={{
-                opacity: [0, 0.7, 0],
-                scale: [0.75, 1.15, 1.35],
-              }}
-              transition={{
-                duration: 2.4,
-                delay: i * 0.7,
-                repeat: Infinity,
-                ease: 'easeOut',
-              }}
-              style={{ transformOrigin: '50px 70px' }}
-            />
-          </motion.g>
-        ))}
+        {/* Sound lines above the mic — animate on their own */}
+        <motion.line
+          x1="48"
+          y1="8"
+          x2="42"
+          y2="18"
+          stroke="#f3dfc6"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          animate={{ opacity: [0.25, 1, 0.25], pathLength: [0.6, 1, 0.6] }}
+          transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut', delay: 0 }}
+        />
+        <motion.line
+          x1="58"
+          y1="4"
+          x2="58"
+          y2="16"
+          stroke="#f3dfc6"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          animate={{ opacity: [0.2, 1, 0.2], y: [2, 0, 2] }}
+          transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut', delay: 0.2 }}
+        />
+        <motion.line
+          x1="68"
+          y1="8"
+          x2="74"
+          y2="18"
+          stroke="#f3dfc6"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          animate={{ opacity: [0.25, 1, 0.25], pathLength: [0.6, 1, 0.6] }}
+          transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
+        />
 
-        {/* Mic body — shakes like "Jasmine" text */}
+        {/* Mic + cable group — shakes */}
         <motion.g
-          style={{ transformOrigin: '60px 70px' }}
+          style={{ transformOrigin: '58px 55px' }}
           animate={{
-            rotate: [0, -4, 5, -3, 4, -2, 1, 0, 0, 0, 0, 0],
+            rotate: [0, -5, 6, -4, 5, -2, 1, 0, 0, 0, 0, 0],
           }}
           transition={{
             duration: 3,
@@ -80,75 +69,84 @@ export const SketchMicDecoration: React.FC = () => {
             times: [0, 0.04, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.5, 0.7, 0.85, 1],
           }}
         >
-          {/* Mic capsule (sketch outline) */}
-          <rect
-            x="46"
-            y="28"
-            width="28"
-            height="48"
-            rx="14"
-            stroke="#f3dfc6"
-            strokeWidth="2.5"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-
-          {/* Horizontal grille lines (sketch) */}
-          {[36, 44, 52, 60].map((y) => (
-            <line
-              key={y}
-              x1="50"
-              y1={y}
-              x2="70"
-              y2={y}
+          {/* Slight tilt of the whole mic to match the doodle */}
+          <g transform="rotate(-18 58 70)">
+            {/* Mic head (rounded capsule) */}
+            <ellipse
+              cx="58"
+              cy="38"
+              rx="18"
+              ry="20"
               stroke="#f3dfc6"
-              strokeWidth="1.6"
+              strokeWidth="2.4"
               strokeLinecap="round"
-              opacity="0.75"
+              strokeLinejoin="round"
+              fill="none"
             />
-          ))}
 
-          {/* Stand stem */}
-          <line
-            x1="60"
-            y1="76"
-            x2="60"
-            y2="100"
-            stroke="#f3dfc6"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-          />
+            {/* Mesh grille — crosshatch sketch */}
+            <g stroke="#f3dfc6" strokeWidth="1.4" strokeLinecap="round" opacity="0.9">
+              {/* Horizontal-ish mesh bands */}
+              <path d="M44 30 Q58 28 72 30" />
+              <path d="M43 36 Q58 34 73 36" />
+              <path d="M43 42 Q58 40 73 42" />
+              <path d="M44 48 Q58 46 72 48" />
+              {/* Diagonal hatch */}
+              <path d="M48 26 L52 50" opacity="0.55" />
+              <path d="M54 25 L56 51" opacity="0.55" />
+              <path d="M60 25 L62 51" opacity="0.55" />
+              <path d="M66 26 L70 50" opacity="0.55" />
+              <path d="M50 50 L54 26" opacity="0.4" />
+              <path d="M58 51 L62 25" opacity="0.4" />
+              <path d="M64 50 L68 27" opacity="0.4" />
+            </g>
 
-          {/* Stand base arc */}
-          <path
-            d="M42 108 Q60 98 78 108"
-            stroke="#f3dfc6"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            fill="none"
-          />
+            {/* Head → body join */}
+            <path
+              d="M48 56 Q58 54 68 56"
+              stroke="#f3dfc6"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              fill="none"
+            />
 
-          {/* Base bar */}
-          <line
-            x1="38"
-            y1="110"
-            x2="82"
-            y2="110"
-            stroke="#f3dfc6"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-          />
+            {/* Handle body */}
+            <path
+              d="M50 56 L48 88 Q58 94 68 88 L66 56"
+              stroke="#f3dfc6"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+            />
 
-          {/* Tiny sketch highlight on capsule */}
-          <path
-            d="M52 34 Q54 32 56 34"
-            stroke="#f3dfc6"
-            strokeWidth="1.4"
-            strokeLinecap="round"
-            fill="none"
-            opacity="0.6"
-          />
+            {/* Handle bottom cap */}
+            <path
+              d="M48 88 Q58 96 68 88"
+              stroke="#f3dfc6"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              fill="none"
+            />
+
+            {/* Small U detail on handle */}
+            <path
+              d="M54 68 Q58 74 62 68"
+              stroke="#f3dfc6"
+              strokeWidth="2"
+              strokeLinecap="round"
+              fill="none"
+            />
+
+            {/* Cable from bottom of handle */}
+            <path
+              d="M58 94 C58 108, 48 112, 42 120 C36 128, 44 132, 52 128 C60 124, 58 136, 58 145"
+              stroke="#f3dfc6"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              fill="none"
+            />
+          </g>
         </motion.g>
       </svg>
     </motion.div>
