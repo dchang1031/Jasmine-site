@@ -19,6 +19,27 @@ const SAMPLES: SampleVideo[] = [
   },
 ];
 
+/** Rounded-corner play triangle via SVG */
+const RoundedPlayTriangle = () => (
+  <svg
+    width="28"
+    height="32"
+    viewBox="0 0 28 32"
+    fill="none"
+    className="ml-1 drop-shadow-md"
+    aria-hidden
+  >
+    <path
+      d="M3.5 4.2C3.5 2.1 5.7 0.8 7.5 1.8L24.2 11.3C26.1 12.4 26.1 15.1 24.2 16.2L7.5 25.7C5.7 26.7 3.5 25.4 3.5 23.3V4.2Z"
+      fill="#f3dfc6"
+      stroke="#f3dfc6"
+      strokeWidth="2"
+      strokeLinejoin="round"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
 const ArtisticPlayButton: React.FC<{ playing: boolean; onClick: () => void }> = ({
   playing,
   onClick,
@@ -32,38 +53,34 @@ const ArtisticPlayButton: React.FC<{ playing: boolean; onClick: () => void }> = 
     <span
       className={`
         relative flex items-center justify-center
-        w-20 h-20 md:w-24 md:h-24
-        rounded-full
-        bg-[#825260]/85 backdrop-blur-sm
-        border-2 border-[#f3dfc6]/60
-        shadow-[0_0_0_6px_rgba(130,82,96,0.25)]
+        w-[88px] h-[88px] md:w-[100px] md:h-[100px]
+        bg-[#825260]/90 backdrop-blur-sm
+        border-2 border-[#f3dfc6]/55
+        shadow-[0_8px_28px_rgba(0,0,0,0.35)]
         transition-all duration-300
         group-hover:scale-110 group-hover:border-[#f3dfc6] group-hover:bg-[#825260]
         ${
           playing ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'
         }
       `}
+      style={{
+        /* Irregular organic shape — not a circle */
+        borderRadius: '58% 42% 55% 45% / 48% 52% 42% 58%',
+      }}
     >
-      {/* Decorative outer ring */}
-      <span className="absolute inset-[-6px] rounded-full border border-[#f3dfc6]/20 pointer-events-none" />
+      {/* Soft secondary blob outline for extra character */}
+      <span
+        className="absolute inset-[-5px] border border-[#f3dfc6]/25 pointer-events-none"
+        style={{ borderRadius: '48% 52% 42% 58% / 58% 42% 55% 45%' }}
+      />
 
       {playing ? (
-        /* Pause icon */
         <span className="flex gap-1.5">
-          <span className="w-2 h-7 bg-[#f3dfc6] rounded-sm" />
-          <span className="w-2 h-7 bg-[#f3dfc6] rounded-sm" />
+          <span className="w-2.5 h-7 bg-[#f3dfc6] rounded-full" />
+          <span className="w-2.5 h-7 bg-[#f3dfc6] rounded-full" />
         </span>
       ) : (
-        /* Artistic triangle */
-        <span
-          className="ml-1 w-0 h-0"
-          style={{
-            borderTop: '14px solid transparent',
-            borderBottom: '14px solid transparent',
-            borderLeft: '24px solid #f3dfc6',
-            filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
-          }}
-        />
+        <RoundedPlayTriangle />
       )}
     </span>
   </button>
@@ -123,9 +140,7 @@ export const VoiceSamplesSection: React.FC = () => {
       </h2>
 
       <div className="flex flex-col gap-12">
-        {/* Top sample — left */}
         <SampleCard sample={SAMPLES[0]} align="left" />
-        {/* Bottom sample — right */}
         <SampleCard sample={SAMPLES[1]} align="right" />
       </div>
     </div>
