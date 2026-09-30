@@ -14,17 +14,25 @@ const heroImages = [
 
 export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking }) => {
   const [currentImage, setCurrentImage] = useState(0);
+  const [shakeKey, setShakeKey] = useState(0);
 
   useEffect(() => {
     const interval = window.setInterval(() => {
       setCurrentImage((index) => (index + 1) % heroImages.length);
+      setShakeKey((k) => k + 1);
     }, 3000);
 
     return () => window.clearInterval(interval);
   }, []);
 
+  // Trigger first shake shortly after mount
+  useEffect(() => {
+    const t = window.setTimeout(() => setShakeKey(1), 400);
+    return () => window.clearTimeout(t);
+  }, []);
+
   return (
-    <div className="flex flex-col items-center w-full pb-20">
+    <div className="flex flex-col items-center w-full pb-10">
       <div className="flex flex-col md:flex-row items-center gap-0 max-w-7xl px-6">
         {/* Editorial Text */}
         <motion.div
@@ -34,7 +42,23 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
           className="w-full md:w-1/2 z-10 flex flex-col items-center text-center"
         >
           <h1 className="font-display text-[120px] font-black tracking-tighter text-[#f3dfc6] mb-6 leading-none">
-            Hi, I'm Jasmine.
+            Hi, I'm{' '}
+            <motion.span
+              key={shakeKey}
+              className="inline-block origin-bottom"
+              initial={{ rotate: 0 }}
+              animate={{
+                rotate: [0, -4, 5, -3, 4, -2, 1, 0],
+              }}
+              transition={{
+                duration: 0.9,
+                ease: 'easeInOut',
+                times: [0, 0.12, 0.28, 0.42, 0.58, 0.72, 0.88, 1],
+              }}
+            >
+              Jasmine
+            </motion.span>
+            .
           </h1>
           <p className="text-xl font-medium text-[#f3dfc6] mb-10 max-w-md">
             I am a voice actress who brings characters to life with grit, soul, and a splash of magic.
