@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useAnimationControls } from 'framer-motion';
 import { FillButton } from './FillButton';
+import { media } from '../assets/media';
 
 interface HeroProps {
   onScrollToSamples: () => void;
   onScrollToBooking: () => void;
 }
 
-const heroImages = [
-  '/src/assets/images/hero_jasmine_portrait_1790733232771.jpg',
-  '/src/assets/images/hero_jasmine_2.jpg',
-  '/src/assets/images/hero_jasmine_3.jpg',
-];
+const heroImages = [media.hero1, media.hero2, media.hero3];
 
 export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking }) => {
   const [currentImage, setCurrentImage] = useState(0);
@@ -44,7 +41,6 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
   return (
     <div className="w-full h-full flex items-center justify-center px-5 md:px-6">
       <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-0 max-w-7xl w-full">
-        {/* Image — first on mobile */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -71,7 +67,6 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
           </motion.div>
         </motion.div>
 
-        {/* Text — second on mobile */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -80,7 +75,6 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
         >
           <h1 className="font-display text-[42px] sm:text-[56px] md:text-[90px] lg:text-[120px] font-black tracking-tighter text-[#f3dfc6] mb-3 md:mb-6 leading-[0.95]">
             Hi, I'm{' '}
-            {/* CSS animation — not blocked by parent framer-motion tree */}
             <span className="inline-block origin-bottom jasmine-shake">Jasmine</span>
             .
           </h1>
