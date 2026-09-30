@@ -18,7 +18,7 @@ export default function App() {
   return (
     <div className="bg-[#6d1822] text-[#1a1a1a] selection:bg-[#e65c26] selection:text-white">
       <Navbar onDirectBooking={() => scrollTo('booking')} />
-      <main className="snap-y snap-proximity">
+      <main>
         <AnimatedSection id="hero" className="pt-10">
           <Hero
             onScrollToSamples={() => scrollTo('samples')}
