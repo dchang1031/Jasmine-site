@@ -1,12 +1,28 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface HeroProps {
   onScrollToSamples: () => void;
   onScrollToBooking: () => void;
 }
 
+const heroImages = [
+  '/src/assets/images/hero_jasmine_portrait_1790733232771.jpg',
+  '/src/assets/images/hero_jasmine_2.jpg',
+  '/src/assets/images/hero_jasmine_3.jpg',
+];
+
 export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking }) => {
+  const [currentImage, setCurrentImage] = useState(0);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setCurrentImage((index) => (index + 1) % heroImages.length);
+    }, 2000);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
   return (
     <section id="hero" className="relative pt-10 pb-20">
       <div className="flex flex-col items-center">
@@ -42,13 +58,24 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
             transition={{ duration: 0.8, delay: 0.4 }}
             className="w-full md:w-1/2 flex justify-center -ml-20 md:ml-0 mt-32 md:mt-20"
           >
-            <motion.img 
-              src="/src/assets/images/hero_jasmine_portrait_1790733232771.jpg" 
-              alt="Jasmine" 
-              className="w-[350px] h-[500px] object-cover card-rounded"
+            <motion.div
+              className="relative w-[350px] h-[500px] overflow-hidden card-rounded"
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            />
+            >
+              <AnimatePresence initial={false} mode="sync">
+                <motion.img
+                  key={heroImages[currentImage]}
+                  src={heroImages[currentImage]}
+                  alt="Jasmine"
+                  className="absolute inset-0 w-full h-full object-cover"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.45, ease: "easeInOut" }}
+                />
+              </AnimatePresence>
+            </motion.div>
           </motion.div>
           
         </div>
