@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
-import { AboutSection } from './components/AboutSection';
+import { AboutSection, ABOUT_MAX_STEP } from './components/AboutSection';
 import { VoiceSamplesSection } from './components/VoiceSamplesSection';
 import { HobbiesSection } from './components/HobbiesSection';
 import { BookingSection } from './components/BookingSection';
@@ -17,34 +17,74 @@ const TRANSITION = {
 
 export default function App() {
   const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState(1); // 1 = down/next, -1 = up/prev
+  const [direction, setDirection] = useState(1);
+  const [aboutStep, setAboutStep] = useState(0);
   const indexRef = useRef(0);
+  const aboutStepRef = useRef(0);
   const locked = useRef(false);
   const touchStartY = useRef<number | null>(null);
 
   indexRef.current = index;
+  aboutStepRef.current = aboutStep;
 
-  const goTo = useCallback((next: number) => {
-    if (locked.current) return;
-    const current = indexRef.current;
-    const clamped = Math.max(0, Math.min(SECTION_IDS.length - 1, next));
-    if (clamped === current) return;
-
+  const lock = useCallback(() => {
     locked.current = true;
-    setDirection(clamped > current ? 1 : -1);
-    setIndex(clamped);
-
     window.setTimeout(() => {
       locked.current = false;
     }, TRANSITION.duration * 1000 + 50);
   }, []);
 
+  const goToSection = useCallback(
+    (next: number) => {
+      if (locked.current) return;
+      const current = indexRef.current;
+      const clamped = Math.max(0, Math.min(SECTION_IDS.length - 1, next));
+      if (clamped === current) return;
+
+      lock();
+      setDirection(clamped > current ? 1 : -1);
+      setIndex(clamped);
+
+      // Reset / set about step when entering about
+      if (SECTION_IDS[clamped] === 'about') {
+        setAboutStep(clamped > current ? 0 : ABOUT_MAX_STEP);
+      }
+    },
+    [lock]
+  );
+
+  const advance = useCallback(
+    (dir: 1 | -1) => {
+      if (locked.current) return;
+
+      const currentId = SECTION_IDS[indexRef.current];
+
+      // Multi-step about section
+      if (currentId === 'about') {
+        const step = aboutStepRef.current;
+        if (dir === 1 && step < ABOUT_MAX_STEP) {
+          lock();
+          setAboutStep(step + 1);
+          return;
+        }
+        if (dir === -1 && step > 0) {
+          lock();
+          setAboutStep(step - 1);
+          return;
+        }
+      }
+
+      goToSection(indexRef.current + dir);
+    },
+    [goToSection, lock]
+  );
+
   const goToId = useCallback(
     (id: SectionId) => {
       const i = SECTION_IDS.indexOf(id);
-      if (i !== -1) goTo(i);
+      if (i !== -1) goToSection(i);
     },
-    [goTo]
+    [goToSection]
   );
 
   // Mouse wheel / trackpad
@@ -52,14 +92,13 @@ export default function App() {
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
       if (locked.current) return;
-
-      if (e.deltaY > 12) goTo(indexRef.current + 1);
-      else if (e.deltaY < -12) goTo(indexRef.current - 1);
+      if (e.deltaY > 12) advance(1);
+      else if (e.deltaY < -12) advance(-1);
     };
 
     window.addEventListener('wheel', onWheel, { passive: false });
     return () => window.removeEventListener('wheel', onWheel);
-  }, [goTo]);
+  }, [advance]);
 
   // Touch swipe
   useEffect(() => {
@@ -71,10 +110,8 @@ export default function App() {
       if (touchStartY.current == null || locked.current) return;
       const dy = touchStartY.current - e.changedTouches[0].clientY;
       touchStartY.current = null;
-
       if (Math.abs(dy) < 40) return;
-      if (dy > 0) goTo(indexRef.current + 1);
-      else goTo(indexRef.current - 1);
+      advance(dy > 0 ? 1 : -1);
     };
 
     window.addEventListener('touchstart', onTouchStart, { passive: true });
@@ -83,22 +120,22 @@ export default function App() {
       window.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('touchend', onTouchEnd);
     };
-  }, [goTo]);
+  }, [advance]);
 
   // Keyboard
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown' || e.key === 'PageDown') {
         e.preventDefault();
-        goTo(indexRef.current + 1);
+        advance(1);
       } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
         e.preventDefault();
-        goTo(indexRef.current - 1);
+        advance(-1);
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [goTo]);
+  }, [advance]);
 
   // Lock native document scroll
   useEffect(() => {
@@ -132,13 +169,16 @@ export default function App() {
         onScrollToBooking={() => goToId('booking')}
       />
     ),
-    about: <AboutSection />,
+    about: <AboutSection step={aboutStep} />,
     samples: <VoiceSamplesSection />,
     hobbies: <HobbiesSection />,
     booking: <BookingSection />,
   };
 
   const currentId = SECTION_IDS[index];
+
+  // Key includes aboutStep only when on about so sub-steps don't remount the section shell
+  const sectionKey = currentId === 'about' ? 'about' : currentId;
 
   return (
     <div className="bg-[#6d1822] text-[#1a1a1a] selection:bg-[#e65c26] selection:text-white h-screen overflow-hidden">
@@ -147,11 +187,10 @@ export default function App() {
         onDirectBooking={() => goToId('booking')}
       />
 
-      {/* Full-viewport stage. Content never scrolls under the nav. */}
       <div className="relative h-screen overflow-hidden">
         <AnimatePresence initial={false} custom={direction} mode="sync">
           <motion.div
-            key={currentId}
+            key={sectionKey}
             custom={direction}
             variants={variants}
             initial="enter"
