@@ -24,7 +24,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ step }) => {
 
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-center px-6">
-      {/* Title */}
+      {/* Title — behind the images */}
       <AnimatePresence mode="wait">
         {!showFinal ? (
           <motion.h2
@@ -33,7 +33,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ step }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -40 }}
             transition={IMAGE_TRANSITION}
-            className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter text-[#f3dfc6] text-center max-w-4xl leading-tight z-10"
+            className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter text-[#f3dfc6] text-center max-w-4xl leading-tight relative z-0"
           >
             I've worked in several projects you might've heard of...
           </motion.h2>
@@ -44,7 +44,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ step }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={IMAGE_TRANSITION}
-            className="text-center z-10 max-w-3xl"
+            className="text-center relative z-0 max-w-3xl"
           >
             <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter text-[#f3dfc6] leading-tight">
               Yep, I was in all of them.
@@ -56,8 +56,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ step }) => {
         )}
       </AnimatePresence>
 
-      {/* Work images — left / middle / right, 3:4, appear one by one */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+      {/* Work images — on top of the text */}
+      <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
         <div className="flex items-end justify-center gap-4 md:gap-8 px-4 w-full max-w-5xl">
           {WORK_IMAGES.map((src, i) => {
             const isVisible = showImages && i < visibleCount;
