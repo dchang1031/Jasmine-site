@@ -18,7 +18,7 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
   useEffect(() => {
     const interval = window.setInterval(() => {
       setCurrentImage((index) => (index + 1) % heroImages.length);
-    }, 2000);
+    }, 3000);
 
     return () => window.clearInterval(interval);
   }, []);
