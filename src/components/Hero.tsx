@@ -19,17 +19,17 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
             transition={{ duration: 0.8 }}
             className="w-full md:w-1/2 z-10 flex flex-col items-center text-center"
           >
-            <h1 className="font-display text-[120px] font-black tracking-tighter text-[#fffdf0] mb-6 leading-none">
+            <h1 className="font-display text-[120px] font-black tracking-tighter text-[#f3dfc6] mb-6 leading-none">
               Hi, I'm Jasmine.
             </h1>
-            <p className="text-xl font-medium text-[#fffdf0] mb-10 max-w-md">
+            <p className="text-xl font-medium text-[#f3dfc6] mb-10 max-w-md">
               I am a voice actress who brings characters to life with grit, soul, and a splash of magic.
             </p>
             <div className="flex gap-4">
-              <button onClick={onScrollToSamples} className="bg-[#fffdf0] text-[#6d1822] px-8 py-4 font-bold text-lg hover:bg-gray-100 rounded-full">
+              <button onClick={onScrollToSamples} className="bg-[#f3dfc6] text-[#6d1822] px-8 py-4 font-bold text-lg hover:bg-gray-100 rounded-full">
                 Listen Now
               </button>
-              <button onClick={onScrollToBooking} className="border-2 border-[#fffdf0] text-[#fffdf0] px-8 py-4 font-bold text-lg hover:bg-[#fffdf0] hover:text-[#6d1822] rounded-full">
+              <button onClick={onScrollToBooking} className="border-2 border-[#f3dfc6] text-[#f3dfc6] px-8 py-4 font-bold text-lg hover:bg-[#f3dfc6] hover:text-[#6d1822] rounded-full">
                 Book
               </button>
             </div>
@@ -42,10 +42,12 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
             transition={{ duration: 0.8, delay: 0.4 }}
             className="w-full md:w-1/2 flex justify-center -ml-20 md:ml-0 mt-32 md:mt-20"
           >
-            <img 
+            <motion.img 
               src="/src/assets/images/hero_jasmine_portrait_1790733232771.jpg" 
               alt="Jasmine" 
-              className="w-[350px] h-[500px] object-cover card-rounded" 
+              className="w-[350px] h-[500px] object-cover card-rounded"
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             />
           </motion.div>
           
