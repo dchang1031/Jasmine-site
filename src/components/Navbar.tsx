@@ -11,7 +11,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onDirectBooking, onNavigate }) =
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="fixed top-4 left-0 right-0 z-50 mx-4 bg-[#825260] rounded-full shadow-lg max-w-[1024px] mx-auto">
+    <header
+      className={`
+        fixed top-4 left-0 right-0 z-50 mx-4 bg-[#825260] shadow-lg max-w-[1024px] mx-auto
+        transition-[border-radius] duration-300
+        ${mobileMenuOpen ? 'rounded-3xl' : 'rounded-full'}
+      `}
+    >
       <div className="px-6 h-16 md:h-20 flex items-center justify-between">
         <button
           type="button"
@@ -55,9 +61,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onDirectBooking, onNavigate }) =
       </div>
 
       {mobileMenuOpen && (
-        <div className="md:hidden px-6 pb-6 flex flex-col gap-4 text-[#f3dfc6] font-bold uppercase tracking-widest">
+        <div className="md:hidden px-6 pb-5 flex flex-col items-start gap-4 text-[#f3dfc6] font-bold uppercase tracking-widest text-sm">
           <button
             type="button"
+            className="py-1"
             onClick={() => {
               onNavigate('about');
               setMobileMenuOpen(false);
@@ -67,6 +74,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onDirectBooking, onNavigate }) =
           </button>
           <button
             type="button"
+            className="py-1"
             onClick={() => {
               onNavigate('samples');
               setMobileMenuOpen(false);
@@ -76,6 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onDirectBooking, onNavigate }) =
           </button>
           <button
             type="button"
+            className="py-1"
             onClick={() => {
               onNavigate('hobbies');
               setMobileMenuOpen(false);
@@ -89,7 +98,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onDirectBooking, onNavigate }) =
               onDirectBooking();
               setMobileMenuOpen(false);
             }}
-            className="!px-5 !py-2 !text-sm w-fit"
+            className="!px-5 !py-2 !text-sm !font-bold uppercase tracking-widest"
           >
             Inquire
           </FillButton>
