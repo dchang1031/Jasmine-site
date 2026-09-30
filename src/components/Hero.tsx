@@ -19,17 +19,17 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking
             transition={{ duration: 0.8 }}
             className="w-full md:w-1/2 z-10 flex flex-col items-center text-center"
           >
-            <h1 className="font-display text-[120px] font-black tracking-tighter text-[#8e2d56] mb-6 leading-none">
+            <h1 className="font-display text-[120px] font-black tracking-tighter text-[#fffdf0] mb-6 leading-none">
               Hi, I'm Jasmine.
             </h1>
-            <p className="text-xl font-medium text-[#8e2d56] mb-10 max-w-md">
+            <p className="text-xl font-medium text-[#fffdf0] mb-10 max-w-md">
               I am a voice actress who brings characters to life with grit, soul, and a splash of magic.
             </p>
             <div className="flex gap-4">
-              <button onClick={onScrollToSamples} className="bg-[#8e2d56] text-white px-8 py-4 font-bold text-lg hover:bg-[#a6519b] rounded-full">
+              <button onClick={onScrollToSamples} className="bg-[#fffdf0] text-[#6d1822] px-8 py-4 font-bold text-lg hover:bg-gray-100 rounded-full">
                 Listen Now
               </button>
-              <button onClick={onScrollToBooking} className="border-2 border-[#8e2d56] text-[#8e2d56] px-8 py-4 font-bold text-lg hover:bg-[#8e2d56] hover:text-white rounded-full">
+              <button onClick={onScrollToBooking} className="border-2 border-[#fffdf0] text-[#fffdf0] px-8 py-4 font-bold text-lg hover:bg-[#fffdf0] hover:text-[#6d1822] rounded-full">
                 Book
               </button>
             </div>
