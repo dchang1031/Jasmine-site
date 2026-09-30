@@ -12,11 +12,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onDirectBooking, onNavigate }) =
 
   return (
     <header
-      className={`
-        fixed top-4 left-0 right-0 z-50 mx-4 bg-[#825260] shadow-lg max-w-[1024px] mx-auto
-        transition-[border-radius] duration-300
-        ${mobileMenuOpen ? 'rounded-3xl' : 'rounded-full'}
-      `}
+      className="fixed top-4 left-0 right-0 z-50 mx-4 bg-[#825260] shadow-lg max-w-[1024px] mx-auto rounded-3xl md:rounded-full"
     >
       <div className="px-6 h-16 md:h-20 flex items-center justify-between">
         <button
