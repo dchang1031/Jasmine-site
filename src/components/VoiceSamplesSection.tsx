@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { media } from '../assets/media';
 
 interface SampleVideo {
   id: string;
@@ -8,16 +9,8 @@ interface SampleVideo {
 }
 
 const SAMPLES: SampleVideo[] = [
-  {
-    id: 'mitsuri',
-    src: '/src/assets/images/Mitsuri.mp4',
-    title: 'Mitsuri',
-  },
-  {
-    id: 'oogway',
-    src: '/src/assets/images/oogway.mp4',
-    title: 'Oogway',
-  },
+  { id: 'mitsuri', src: media.mitsuri, title: 'Mitsuri' },
+  { id: 'oogway', src: media.oogway, title: 'Oogway' },
 ];
 
 const RoundedPlayTriangle = () => (
