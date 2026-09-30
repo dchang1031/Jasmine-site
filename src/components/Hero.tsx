@@ -9,15 +9,15 @@ interface HeroProps {
 export const Hero: React.FC<HeroProps> = ({ onScrollToSamples, onScrollToBooking }) => {
   return (
     <section id="hero" className="relative pt-10 pb-20">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="flex flex-col md:flex-row items-center gap-0">
+      <div className="flex flex-col items-center">
+        <div className="flex flex-col md:flex-row items-center gap-0 max-w-7xl px-6">
           
           {/* Editorial Text - Center */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="w-full md:w-1/2 z-10 flex flex-col items-center md:items-center text-center md:text-center"
+            className="w-full md:w-1/2 z-10 flex flex-col items-center text-center"
           >
             <h1 className="font-display text-[120px] font-black tracking-tighter text-[#8e2d56] mb-6 leading-none">
               Hi, I'm Jasmine.
