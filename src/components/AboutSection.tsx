@@ -13,7 +13,7 @@ export const AboutSection: React.FC = () => {
             hidden: { opacity: 0 },
             visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
           }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center bg-[#ebd7da] p-8 card-rounded"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center bg-[#825260] p-8 card-rounded"
         >
           
           <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="relative">
@@ -24,7 +24,7 @@ export const AboutSection: React.FC = () => {
           <div className="space-y-6">
             <motion.h2 variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="font-display text-7xl font-black tracking-tighter text-[#8e2d56]">This is who I am.</motion.h2>
             <motion.p variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="text-xl leading-relaxed text-[#8e2d56]">
-              Hi, I’m Jasmine. I bring stories to life with a dash of soul and a lot of grit. 
+              Hi, I'm Jasmine. I bring stories to life with a dash of soul and a lot of grit. 
             </motion.p>
             <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="border-l-4 border-[#8e2d56] pl-6 py-2">
               <p className="font-editorial text-2xl italic">"Every voice is a universe."</p>
