@@ -6,6 +6,7 @@ import { AboutSection, ABOUT_MAX_STEP } from './components/AboutSection';
 import { VoiceSamplesSection } from './components/VoiceSamplesSection';
 import { HobbiesSection } from './components/HobbiesSection';
 import { BookingSection } from './components/BookingSection';
+import { SketchMicDecoration } from './components/SketchMicDecoration';
 
 const SECTION_IDS = ['hero', 'about', 'samples', 'hobbies', 'booking'] as const;
 type SectionId = (typeof SECTION_IDS)[number];
@@ -45,7 +46,6 @@ export default function App() {
       setDirection(clamped > current ? 1 : -1);
       setIndex(clamped);
 
-      // Reset / set about step when entering about
       if (SECTION_IDS[clamped] === 'about') {
         setAboutStep(clamped > current ? 0 : ABOUT_MAX_STEP);
       }
@@ -59,7 +59,6 @@ export default function App() {
 
       const currentId = SECTION_IDS[indexRef.current];
 
-      // Multi-step about section
       if (currentId === 'about') {
         const step = aboutStepRef.current;
         if (dir === 1 && step < ABOUT_MAX_STEP) {
@@ -87,7 +86,6 @@ export default function App() {
     [goToSection]
   );
 
-  // Mouse wheel / trackpad
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
@@ -100,7 +98,6 @@ export default function App() {
     return () => window.removeEventListener('wheel', onWheel);
   }, [advance]);
 
-  // Touch swipe
   useEffect(() => {
     const onTouchStart = (e: TouchEvent) => {
       touchStartY.current = e.touches[0].clientY;
@@ -122,7 +119,6 @@ export default function App() {
     };
   }, [advance]);
 
-  // Keyboard
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown' || e.key === 'PageDown') {
@@ -137,7 +133,6 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKey);
   }, [advance]);
 
-  // Lock native document scroll
   useEffect(() => {
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
@@ -176,9 +171,8 @@ export default function App() {
   };
 
   const currentId = SECTION_IDS[index];
-
-  // Key includes aboutStep only when on about so sub-steps don't remount the section shell
   const sectionKey = currentId === 'about' ? 'about' : currentId;
+  const showMic = currentId === 'about' || currentId === 'samples';
 
   return (
     <div className="bg-[#6d1822] text-[#1a1a1a] selection:bg-[#e65c26] selection:text-white h-screen overflow-hidden">
@@ -205,6 +199,11 @@ export default function App() {
           </motion.div>
         </AnimatePresence>
       </div>
+
+      {/* Sketch mic — visible from About through Samples */}
+      <AnimatePresence>
+        {showMic && <SketchMicDecoration key="sketch-mic" />}
+      </AnimatePresence>
     </div>
   );
 }
