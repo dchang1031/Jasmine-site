@@ -1,10 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
 export const AboutSection: React.FC = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const aboutElement = document.getElementById('about');
+      if (!aboutElement) return;
+
+      const aboutRect = aboutElement.getBoundingClientRect();
+      // When about section is within viewport, fade in
+      if (aboutRect.top < window.innerHeight * 0.75) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <section id="about" className="py-20">
-      <div className="max-w-7xl mx-auto px-6">
+    <motion.section
+      id="about"
+      className="py-20 min-h-screen flex items-center"
+      initial={{ opacity: 0, y: 100 }}
+      animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 100 }}
+      transition={{ duration: 0.8, ease: 'easeOut', delay: 0.5 }}
+    >
+      <div className="max-w-7xl mx-auto px-6 w-full">
         <motion.div 
           initial="hidden"
           whileInView="visible"
@@ -33,6 +59,6 @@ export const AboutSection: React.FC = () => {
           
         </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };
