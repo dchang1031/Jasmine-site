@@ -1,56 +1,92 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
-export const AboutSection: React.FC = () => {
+interface AboutSectionProps {
+  /** 0 = title only, 1–3 = images revealed, 4 = images gone + final copy */
+  step: number;
+}
+
+const WORK_IMAGES = [
+  '/src/assets/images/work1.jpg',
+  '/src/assets/images/work2.jpg',
+  '/src/assets/images/work3.jpg',
+];
+
+const IMAGE_TRANSITION = {
+  duration: 0.7,
+  ease: [0.22, 1, 0.36, 1] as const,
+};
+
+export const AboutSection: React.FC<AboutSectionProps> = ({ step }) => {
+  const showImages = step >= 1 && step <= 3;
+  const showFinal = step >= 4;
+  const visibleCount = Math.min(Math.max(step, 0), 3);
+
   return (
-    <div className="max-w-7xl mx-auto px-6 w-full py-20">
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-        variants={{
-          hidden: { opacity: 0 },
-          visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
-        }}
-        className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center bg-[#825260] p-8 card-rounded"
-      >
-        <motion.div
-          variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-          className="relative"
-        >
-          <img
-            src="/src/assets/images/bio_studio_microphone_1790733243013.jpg"
-            alt="Studio"
-            className="w-full h-auto aspect-video object-cover rounded-[40px]"
-          />
-          <div className="sticker absolute -bottom-8 -left-8 bg-[#8e2d56] text-white w-28 h-28 rounded-blob flex items-center justify-center font-bold">
-            NEW!
-          </div>
-        </motion.div>
-
-        <div className="space-y-6">
+    <div className="relative w-full h-full flex flex-col items-center justify-center px-6">
+      {/* Title */}
+      <AnimatePresence mode="wait">
+        {!showFinal ? (
           <motion.h2
-            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-            className="font-display text-7xl font-black tracking-tighter text-[#f3dfc6]"
+            key="intro-title"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -40 }}
+            transition={IMAGE_TRANSITION}
+            className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter text-[#f3dfc6] text-center max-w-4xl leading-tight z-10"
           >
-            This is who I am.
+            I've worked in several projects you might've heard of...
           </motion.h2>
-          <motion.p
-            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-            className="text-xl leading-relaxed text-[#f3dfc6]"
-          >
-            Hi, I'm Jasmine. I bring stories to life with a dash of soul and a lot of grit.
-          </motion.p>
+        ) : (
           <motion.div
-            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-            className="border-l-4 border-[#f3dfc6] pl-6 py-2"
+            key="final-copy"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={IMAGE_TRANSITION}
+            className="text-center z-10 max-w-3xl"
           >
-            <p className="font-editorial text-2xl italic text-[#f3dfc6]">
-              "Every voice is a universe."
+            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter text-[#f3dfc6] leading-tight">
+              Yep, I was in all of them.
+            </h2>
+            <p className="mt-6 text-xl md:text-2xl text-[#f3dfc6] font-medium">
+              I do animes, games, and commercials.
             </p>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Work images — left / middle / right, 3:4, appear one by one */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="flex items-end justify-center gap-4 md:gap-8 px-4 w-full max-w-5xl">
+          {WORK_IMAGES.map((src, i) => {
+            const isVisible = showImages && i < visibleCount;
+            return (
+              <AnimatePresence key={src}>
+                {isVisible && (
+                  <motion.div
+                    initial={{ opacity: 0, y: '50%' }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: '-40%' }}
+                    transition={IMAGE_TRANSITION}
+                    className="flex-1 max-w-[200px] md:max-w-[240px]"
+                    style={{ aspectRatio: '3 / 4' }}
+                  >
+                    <img
+                      src={src}
+                      alt={`Project ${i + 1}`}
+                      className="w-full h-full object-cover rounded-[24px] shadow-2xl border-2 border-[#f3dfc6]/20"
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            );
+          })}
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 };
+
+/** Number of internal steps in the about section (0..4 inclusive = 5 steps) */
+export const ABOUT_MAX_STEP = 4;
