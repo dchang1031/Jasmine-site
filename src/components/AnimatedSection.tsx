@@ -10,11 +10,10 @@ interface AnimatedSectionProps {
 /**
  * Continuous scroll-scrubbed section transition.
  *
- * Behavior:
- * - Only one section is meaningfully visible at a time
- * - Incoming content slides up from the bottom while fading in
- * - Outgoing content slides up and fades out early (gone before reaching the sticky nav)
- * - Opacity and position are continuously driven by scroll position (not instant jumps)
+ * - Sections are viewport-tall with top padding so content sits below the sticky nav
+ * - When snapped in view (progress ~0.5) opacity is fully 1
+ * - Enter: slides up from below while fading in
+ * - Exit: slides up and fades out before content can reach the nav
  */
 export const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   id,
@@ -25,35 +24,34 @@ export const AnimatedSection: React.FC<AnimatedSectionProps> = ({
 
   const { scrollYProgress } = useScroll({
     target: ref,
-    // 0 = section top hits viewport bottom (about to enter)
-    // 1 = section bottom hits viewport top (fully left)
+    // 0 = section top at viewport bottom
+    // ~0.5 = section filling the viewport (snapped)
+    // 1 = section bottom at viewport top
     offset: ['start end', 'end start'],
   });
 
-  // Steep, early curves so:
-  // 1. Enter is a clear slide-up from below
-  // 2. Full visibility is brief
-  // 3. Exit finishes while content is still well below the nav
-  //
-  // progress keyframes:  enter → hold → exit
+  // Hold range must include ~0.5 so a snapped section is fully opaque.
+  // Enter finishes before 0.5; exit starts after 0.5 and completes early.
   const opacity = useTransform(
     scrollYProgress,
-    [0.02, 0.18, 0.42, 0.58],
+    [0.05, 0.28, 0.72, 0.9],
     [0, 1, 1, 0]
   );
 
-  // Positive y = below viewport → 0 = in place → negative y = sliding up and away
+  // Slide up from below on enter; slide further up on exit
   const y = useTransform(
     scrollYProgress,
-    [0.02, 0.18, 0.42, 0.58],
-    [160, 0, 0, -180]
+    [0.05, 0.28, 0.72, 0.9],
+    [140, 0, 0, -160]
   );
 
   return (
     <section
       ref={ref}
       id={id}
-      className={`relative h-screen flex items-center justify-center overflow-hidden snap-start snap-always ${className}`}
+      // pt-28 (~7rem) clears the sticky nav (top-4 + h-20)
+      // so content is vertically centered in the visible area below the nav
+      className={`relative h-screen pt-28 box-border flex items-center justify-center overflow-hidden snap-start snap-always ${className}`}
     >
       <motion.div
         style={{ opacity, y }}
