@@ -7,9 +7,10 @@
     --accent-maroon: #8e2d56;
     --accent-purple: #a6519b;
   }
-  html {
-    scroll-behavior: smooth;
-    scroll-snap-type: y mandatory;
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
   }
   body {
     background-color: var(--bg-light-purple);
@@ -30,12 +31,4 @@
 
 .card-rounded {
   border-radius: 40px;
-}
-
-/* Section scroll snap */
-.snap-start {
-  scroll-snap-align: start;
-}
-.snap-always {
-  scroll-snap-stop: always;
 }
